@@ -1,0 +1,95 @@
+#junos-config
+## Last changed: 2018-01-11 09:04:16 UTC
+version 17.3R1.10;
+system {
+    root-authentication {
+        encrypted-password "$6$QS0h283w$Z/DYdhO2ggS6RHxSaRFCVHyrKBvOw/T6xVkxgnF2vkZAAMnXT2TMiEG8r6ROm2uhlWXeei3vwDLnG0DDtulY10"; ## SECRET-DATA
+    }
+    login {
+        user lab {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$6$B7u4vkRt$hVb9VozyTZtVdXvXC5vhJgLgHu.CdxyTbejyjx3J70R6X2l4wWXL3GtPb3pSkdqysm2DcrfF4OMC9YZgT/06S0"; ## SECRET-DATA
+            }
+        }
+    }
+    services {
+        ssh;
+        web-management {
+            http {
+                interface fxp0.0;
+            }
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any any;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+    license {
+        autoupdate {
+            url https://ae1.juniper.net/junos/key_retrieval;
+        }
+    }
+}
+security {
+    zones {
+        security-zone trust {
+            host-inbound-traffic {
+                system-services {
+                    all;
+                }
+                protocols {
+                    all;
+                }
+            }
+            interfaces {
+                ge-0/0/0.0;
+            }
+        }
+        security-zone untrust {
+            host-inbound-traffic {
+                system-services {
+                    all;
+                }
+                protocols {
+                    all;
+                }
+            }
+            interfaces {
+                ge-0/0/1.0;
+            }
+        }
+    }
+}
+interfaces {
+    ge-0/0/0 {
+        unit 0 {
+            family inet {
+                dhcp;
+            }
+        }
+    }
+    ge-0/0/1 {
+        unit 0 {
+            family inet {
+                dhcp;
+            }
+        }
+    }
+    fxp0 {
+        unit 0 {
+            family inet {
+                dhcp;
+            }
+        }
+    }
+}
