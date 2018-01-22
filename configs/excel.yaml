@@ -1,0 +1,6 @@
+---
+excel_file:
+key_column:
+variable_name_row:
+lock_file_retries:
+lock_file_delay:
