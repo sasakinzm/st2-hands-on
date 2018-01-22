@@ -1,0 +1,6 @@
+---
+- name: "Hands on 2 Playbook"
+  hosts: server
+  user: "centos"
+  tasks:
+  - shell: "touch /home/centos/handson-2-file"
