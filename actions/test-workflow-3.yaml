@@ -1,0 +1,12 @@
+---
+name: "handson_3_workflow"
+pack: "default"
+description: "Handson 3 Workflow"
+enabled: true
+entry_point: workflows/test-workflow-3.yaml
+runner_type: mistral-v2
+
+parameters:
+  target:
+    required: true
+    type: string
