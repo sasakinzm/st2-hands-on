@@ -1,0 +1,24 @@
+version: '2.0'
+
+default.handson_3_workflow:
+  description: "Handson 3 Workflow"
+  type: direct
+  input:
+    - target
+  tasks:
+    ping:
+      action: core.local cmd="ping <% $.target %> -c 1"
+      on-success:
+        - success_msg
+      on-error:
+        - failure_msg
+
+    success_msg:
+      action: slack.post_message
+      input:
+        message: "PING SUCCEEDED SASAKI"
+
+    failure_msg:
+      action: slack.post_message
+      input:
+        message: "PING FAILED SASAKI"
