@@ -1,0 +1,23 @@
+---
+- name: "SET NAT to vsrx"
+  hosts: junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    netconf:
+      host: "{{ inventory_hostname }}"
+      username: "{{ ansible_ssh_user}}"
+      password: "{{ ansible_ssh_pass}}"
+
+  tasks:
+   - name: NAT
+     junos_config:
+       lines:
+         - set security nat destination pool pool-1 address "{{ webserver_private_ip }}"/32
+         - set security nat destination rule-set d-rule-set-1 from zone untrust
+         - set security nat destination rule-set d-rule-set-1 rule rule-10 match destination-address "{{ nat_ip }}"/32
+         - set security nat destination rule-set d-rule-set-1 rule rule-10 then destination-nat pool pool-1
+         - set security nat proxy-arp interface ge-0/0/0.0 address "{{ nat_ip }}"/32
+       provider: "{{ netconf }}"
+       timeout: 300
