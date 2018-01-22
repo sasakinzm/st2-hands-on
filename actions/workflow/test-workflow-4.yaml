@@ -1,0 +1,35 @@
+---
+version: '2.0'
+
+default.handson_4_workflow:
+  tasks:
+    read_excel:
+      action: excel.get_variables
+      input:
+        excel_file: "/home/centos/OrderSheet.xlsx"
+        sheet: "junos"
+        key: "1"
+      publish:
+        webserver_private_ip: <% task(read_excel).result.result.webserver_private_ip %>
+        nat_ip: <% task(read_excel).result.result.nat_ip %>
+      on-success:
+        - set_nat
+    set_nat:
+      action: ansible.playbook
+      input:
+        playbook: /home/centos/ansible-playbook/handson-4-playbook.yaml
+        extra_vars:
+        - webserver_private_ip=<% $.webserver_private_ip %>
+        - nat_ip=<% $.nat_ip %>
+      on-success:
+        - success_msg
+      on-error:
+        - failure_msg
+    success_msg:
+      action: slack.post_message
+      input:
+        message: "Config Change SUCCEEDED SASAKI"
+    failure_msg:
+      action: slack.post_message
+      input:
+        message: " Config Change FAILED SASAKI"
