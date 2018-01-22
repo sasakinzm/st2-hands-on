@@ -1,0 +1,23 @@
+---
+  name: "handson_1_rule"
+  pack: "default"
+  description: "Handson 1 Rule"
+  enabled: true
+
+  trigger:
+    type: "core.st2.webhook"
+    parameters:
+      url: handson1
+
+  criteria:
+    trigger.body.key1:
+      type: "equals"
+      pattern: "test1"
+
+  action:
+    ref: "core.remote"
+    parameters:
+      cmd: "sudo touch /home/centos/handson-1-file"
+      hosts: "192.168.20.40"
+      username: "centos"
+      password: "Handson123"
