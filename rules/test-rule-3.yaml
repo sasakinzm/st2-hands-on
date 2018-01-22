@@ -1,0 +1,20 @@
+---
+  name: "handson_3_rule"
+  pack: "default"
+  description: "Handson 3 Rule"
+  enabled: true
+
+  trigger:
+    type: "core.st2.webhook"
+    parameters:
+      url: handson3
+
+  criteria:
+    trigger.body.key1:
+      type: "equals"
+      pattern: "test3"
+
+  action:
+    ref: "default.handson_3_workflow"
+    parameters:
+      target: "192.168.20.40"
