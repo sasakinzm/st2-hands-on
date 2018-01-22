@@ -1,0 +1,20 @@
+---
+  name: "handson_2_rule"
+  pack: "default"
+  description: "Handson 2 Rule"
+  enabled: true
+
+  trigger:
+    type: "core.st2.webhook"
+    parameters:
+      url: handson2
+
+  criteria:
+    trigger.body.key1:
+      type: "equals"
+      pattern: "test2"
+
+  action:
+    ref: "ansible.playbook"
+    parameters:
+      playbook: "/home/centos/ansible-playbook/handson-2-playbook.yaml"
