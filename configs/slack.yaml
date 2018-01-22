@@ -1,0 +1,7 @@
+---
+# Used for post message action
+post_message_action:
+  webhook_url: "https://hooks.slack.com/services/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"
+  channel: "#handson"
+  username: "Handson-Notification"
+  icon_emoji: ":slack:"
