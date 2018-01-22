@@ -1,0 +1,12 @@
+[local]
+127.0.0.1
+
+[server]
+192.168.20.40
+
+[junos]
+192.168.20.30
+
+[junos:vars]
+ansible_ssh_user=root
+ansible_ssh_pass=xxxx
