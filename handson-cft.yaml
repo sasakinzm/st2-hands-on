@@ -1,0 +1,335 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+
+#VPC作成
+  MakeVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      Tags:
+      - Key: Name
+        Value: HandsonVPC
+
+#IGW作成
+  MakeIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: Handson-igw
+
+#IGWをVPCにアタッチ
+  AttachIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MakeVPC
+      InternetGatewayId: !Ref MakeIGW
+
+#ルートテーブル3つ作成
+  MakeExternalRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: External-rt
+  MakeInternalRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: internal-rt
+  MakeManagementRT:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: Management-rt
+
+#Externalサブネット作成,ルートテーブル関連付け、デフォゲ追加
+  MakeExternalSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn: AttachIGW
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: ap-northeast-1a
+      MapPublicIpOnLaunch: 'false'
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: External
+  ExternalSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MakeExternalSubnet
+      RouteTableId: !Ref MakeExternalRT
+  AddDGWExternalRT:
+    Type: AWS::EC2::Route
+    DependsOn: AttachIGW
+    Properties:
+      RouteTableId: !Ref MakeExternalRT
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MakeIGW
+
+#Internalサブネット作成,ルートテーブル関連付け
+  MakeInternalSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn: AttachIGW
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: ap-northeast-1a
+      MapPublicIpOnLaunch: 'false'
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: Internal
+  InternalSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MakeInternalSubnet
+      RouteTableId: !Ref MakeInternalRT
+
+#Managementサブネット作成,ルートテーブル関連付け
+  MakeManagementSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn: AttachIGW
+    Properties:
+      CidrBlock: 10.0.3.0/24
+      AvailabilityZone: ap-northeast-1a
+      MapPublicIpOnLaunch: 'false'
+      VpcId: !Ref MakeVPC
+      Tags:
+      - Key: Name
+        Value: Management
+  ManagementSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MakeManagementSubnet
+      RouteTableId: !Ref MakeManagementRT
+
+#セキュリティグループ３つ作成
+  MakeExternalSG:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: MakeVPC
+    Properties:
+      GroupName: External-sg
+      GroupDescription: External-sg
+      VpcId: !Ref MakeVPC
+      SecurityGroupIngress: 
+      -
+        CidrIp: 202.19.222.3/32
+        FromPort: 80
+        ToPort: 80
+        IpProtocol: tcp
+      -
+        CidrIp: 202.19.222.3/32
+        FromPort: 22
+        ToPort: 22
+        IpProtocol: tcp
+      -
+        CidrIp: 202.19.222.3/32
+        FromPort: 443
+        ToPort: 443
+        IpProtocol: tcp
+  MakeInternalSG:
+    DependsOn: MakeVPC
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Internal-sg
+      GroupDescription: Internal-sg
+      VpcId: !Ref MakeVPC
+      SecurityGroupIngress: 
+      -
+        CidrIp: 0.0.0.0/0
+        FromPort: 1
+        ToPort: 65535
+        IpProtocol: -1
+  MakeManagementSG:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: MakeVPC
+    Properties:
+      GroupName: Management-sg
+      GroupDescription: Management-sg
+      VpcId: !Ref MakeVPC
+      SecurityGroupIngress: 
+      -
+        CidrIp: 0.0.0.0/0
+        FromPort: 1
+        ToPort: 65535
+        IpProtocol: -1
+  AddExternalSGIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: MakeExternalSG
+    Properties:
+      GroupId: !Ref MakeExternalSG
+      IpProtocol: -1
+      FromPort: 1
+      ToPort: 65535
+      SourceSecurityGroupId: !Ref MakeExternalSG
+  AddExternalSGIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: MakeExternalSG
+    Properties:
+      GroupId: !Ref MakeExternalSG
+      IpProtocol: -1
+      FromPort: 1
+      ToPort: 65535
+      SourceSecurityGroupId: !Ref MakeInternalSG
+
+#ネットワークインターフェース４つ作成
+  MakeEWCManagementInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref MakeManagementSubnet
+      PrivateIpAddress: 10.0.3.20
+      SourceDestCheck: false
+      GroupSet:
+      - !Ref MakeManagementSG
+      Tags:
+      - Key: Name
+        Value: ewc-management
+  MakeVSRXExternalInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref MakeExternalSubnet
+      PrivateIpAddresses:
+      - PrivateIpAddress: 10.0.1.30
+        Primary: true
+      - PrivateIpAddress: 10.0.1.31
+        Primary: false
+      SourceDestCheck: false
+      GroupSet:
+      - !Ref MakeExternalSG
+      Tags:
+      - Key: Name
+        Value: vsrx-external
+  MakeVSRXInternalInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref MakeInternalSubnet
+      PrivateIpAddress: 10.0.2.30
+      SourceDestCheck: false
+      GroupSet:
+      - !Ref MakeInternalSG
+      Tags:
+      - Key: Name
+        Value: vsrx-internal
+  MakeWebManagementInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref MakeManagementSubnet
+      PrivateIpAddress: 10.0.3.40
+      SourceDestCheck: false
+      GroupSet:
+      - !Ref MakeManagementSG
+      Tags:
+      - Key: Name
+        Value: web-management
+
+#インスタンス３つ起動
+  LaunchEWC:
+    Type: AWS::EC2::Instance
+    Properties: 
+      AvailabilityZone: ap-northeast-1a
+      ImageId: ami-cdbddeab
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t2.medium
+      KeyName: handson-key
+      PrivateIpAddress: 10.0.1.20
+      SecurityGroupIds: 
+      - !Ref MakeExternalSG
+      SourceDestCheck: false
+      SubnetId: !Ref MakeExternalSubnet
+      Tags: 
+      - Key: Name
+        Value: EWC
+  LaunchVSRX:
+    Type: AWS::EC2::Instance
+    Properties: 
+      AvailabilityZone: ap-northeast-1a
+      ImageId: ami-ddbad9bb
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: c4.xlarge
+      KeyName: handson-key
+      PrivateIpAddress: 10.0.3.30
+      SecurityGroupIds: 
+      - !Ref MakeManagementSG
+      SourceDestCheck: false
+      SubnetId: !Ref MakeManagementSubnet
+      Tags: 
+      - Key: Name
+        Value: vSRX
+  LaunchWeb:
+    Type: AWS::EC2::Instance
+    Properties: 
+      AvailabilityZone: ap-northeast-1a
+      ImageId: ami-4bb4d72d
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t2.micro
+      KeyName: handson-key
+      PrivateIpAddress: 10.0.2.40
+      SecurityGroupIds: 
+      - !Ref MakeInternalSG
+      SourceDestCheck: false
+      SubnetId: !Ref MakeInternalSubnet
+      Tags: 
+      - Key: Name
+        Value: Web
+
+#インスタンスにネットワークインターフェースアタッチ
+  EWCManagementInterfaceAttach:
+    Type: AWS::EC2::NetworkInterfaceAttachment
+    Properties:
+      DeleteOnTermination: false
+      DeviceIndex: 1
+      InstanceId: !Ref LaunchEWC
+      NetworkInterfaceId: !Ref MakeEWCManagementInterface
+  VSRXExtermalInterfaceAttach:
+    Type: AWS::EC2::NetworkInterfaceAttachment
+    Properties:
+      DeleteOnTermination: false
+      DeviceIndex: 1
+      InstanceId: !Ref LaunchVSRX
+      NetworkInterfaceId: !Ref MakeVSRXExternalInterface
+  VSRXInternalInterfaceAttach:
+    Type: AWS::EC2::NetworkInterfaceAttachment
+    Properties:
+      DeleteOnTermination: false
+      DeviceIndex: 2
+      InstanceId: !Ref LaunchVSRX
+      NetworkInterfaceId: !Ref MakeVSRXInternalInterface
+  WebManagementInterfaceAttach:
+    Type: AWS::EC2::NetworkInterfaceAttachment
+    Properties:
+      DeleteOnTermination: false
+      DeviceIndex: 1
+      InstanceId: !Ref LaunchWeb
+      NetworkInterfaceId: !Ref MakeWebManagementInterface
+
+#EIP作成
+  GenerateEIP1:
+    Type: AWS::EC2::EIP
+    DependsOn: LaunchEWC
+    Properties:
+      Domain: !Ref MakeVPC
+  GenerateEIP2:
+    DependsOn: LaunchVSRX
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: !Ref MakeVPC
+
+#EIP割り当て
+  EWCAssociateEIP:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt GenerateEIP1.AllocationId
+      NetworkInterfaceId: !Ref MakeEWCManagementInterface
+      PrivateIpAddress: 10.0.3.20
+  VSRXAssociateEIP:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt GenerateEIP2.AllocationId
+      NetworkInterfaceId: !Ref MakeVSRXExternalInterface
+      PrivateIpAddress: 10.0.1.31
