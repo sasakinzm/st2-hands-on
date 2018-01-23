@@ -1,0 +1,59 @@
+
+
+◆VPC
+・テスト用VPC作成　192.168.0.0/16,ap-northeast-1a
+・サブネット3つ作成　
+  - external 192.168.0.0/24,ap-northeast-1a
+  - internal 192.168.10.0/24,ap-northeast-1a
+  - mgmt 192.168.20.0/24,ap-northeast-1a
+・インターネットゲートウェイ1つ作成 igw-handsonA
+・ルートテーブル3つ作成 rt-external,rt-internal,rt-mgmt
+・ルートテーブル編集
+  - externalにigw
+・NATゲートウェイをexternalに作成 
+
+◆EC2一般
+・セキュリティグループ3つ作成
+  - internal-sg: inbound/outbound ともに全通し
+  - mgmt-sg: inbound/outbound ともに全通し
+  - external-sg: inboundはssh/http:ラボセグメント / externalとInternalのSGを全通し
+・セキュリティキー1つ作成（既存作成）
+・ネットワークインターフェース4つ作成
+  ※送信元/送信先の変更チェックを無効にすること
+  - vsrx-external　192.168.0.30
+  - vsrx-internal　192.168.10.30
+  - web-mgmt 192.168.20.40
+  - st2-mgmt 192.168.20.20
+
+◆EWC用サーバ
+・t2.mediumでAMIから起動　handon-ewc-ami
+・起動時のNW: external 192.168.0.20
+<起動後>
+・起動後追加NW: mgmt
+・ネットワークインターフェースのアタッチ x1
+・再起動
+・external側のIFにEIPアタッチ
+
+◆vSRX
+・c4.xlargeでAMIから起動
+・起動時にuser-data埋め込み(初期コンフィグ)
+・起動時のNW: mgmt 192.168.20.30
+・user-data貼り付け
+<起動後>
+・起動後追加NW: external, internal
+・ネットワークインターフェースのアタッチ x2
+・再起動
+・externalのネットワークインターフェースにセカンダリIP付与　192.168.0.31
+・externalのネットワークインターフェースにEIPアタッチ
+
+◆Webサーバ
+・t2.microでAMIから起動　handon-websever-ami
+・起動時のNW: internal 192.168.10.40
+<起動後>
+・起動後追加NW: mgmt
+・ネットワークインターフェースのアタッチ x1
+・再起動
+
+◆インスタンス起動後に実行
+・ルートテーブル編集
+  - internalのDGWにvSRXのinternal側ネットワークインターフェース設定
