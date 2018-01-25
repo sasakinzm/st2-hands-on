@@ -1,59 +1,56 @@
 
 
-ŸVPC
-EƒeƒXƒg—pVPCì¬@192.168.0.0/16,ap-northeast-1a
-EƒTƒuƒlƒbƒg3‚Âì¬@
+â—†VPC
+ãƒ»ãƒ†ã‚¹ãƒˆç”¨VPCä½œæˆã€€192.168.0.0/16,ap-northeast-1a
+ãƒ»ã‚µãƒ–ãƒãƒƒãƒˆ3ã¤ä½œæˆã€€
   - external 192.168.0.0/24,ap-northeast-1a
   - internal 192.168.10.0/24,ap-northeast-1a
   - mgmt 192.168.20.0/24,ap-northeast-1a
-EƒCƒ“ƒ^[ƒlƒbƒgƒQ[ƒgƒEƒFƒC1‚Âì¬ igw-handsonA
-Eƒ‹[ƒgƒe[ƒuƒ‹3‚Âì¬ rt-external,rt-internal,rt-mgmt
-Eƒ‹[ƒgƒe[ƒuƒ‹•ÒW
-  - external‚Éigw
-ENATƒQ[ƒgƒEƒFƒC‚ğexternal‚Éì¬ 
+ãƒ»ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆã‚²ãƒ¼ãƒˆã‚¦ã‚§ã‚¤1ã¤ä½œæˆ igw-handsonA
+ãƒ»ãƒ«ãƒ¼ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«3ã¤ä½œæˆ rt-external,rt-internal,rt-mgmt
+ãƒ»ãƒ«ãƒ¼ãƒˆãƒ†ãƒ¼ãƒ–ãƒ«ç·¨é›†
+  - externalã«igw
 
-ŸEC2ˆê”Ê
-EƒZƒLƒ…ƒŠƒeƒBƒOƒ‹[ƒv3‚Âì¬
-  - internal-sg: inbound/outbound ‚Æ‚à‚É‘S’Ê‚µ
-  - mgmt-sg: inbound/outbound ‚Æ‚à‚É‘S’Ê‚µ
-  - external-sg: inbound‚Íssh/http:ƒ‰ƒ{ƒZƒOƒƒ“ƒg / external‚ÆInternal‚ÌSG‚ğ‘S’Ê‚µ
-EƒZƒLƒ…ƒŠƒeƒBƒL[1‚Âì¬iŠù‘¶ì¬j
-Eƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX4‚Âì¬
-  ¦‘—MŒ³/‘—Mæ‚Ì•ÏXƒ`ƒFƒbƒN‚ğ–³Œø‚É‚·‚é‚±‚Æ
-  - vsrx-external@192.168.0.30
-  - vsrx-internal@192.168.10.30
+â—†EC2ä¸€èˆ¬
+ãƒ»ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã‚°ãƒ«ãƒ¼ãƒ—3ã¤ä½œæˆ
+  - internal-sg: inbound/outbound ã¨ã‚‚ã«å…¨é€šã—
+  - mgmt-sg: inbound/outbound ã¨ã‚‚ã«å…¨é€šã—
+  - external-sg: inboundã¯ssh/http:ãƒ©ãƒœã‚»ã‚°ãƒ¡ãƒ³ãƒˆ / externalã¨Internalã®SGã‚’å…¨é€šã—
+ãƒ»ã‚»ã‚­ãƒ¥ãƒªãƒ†ã‚£ã‚­ãƒ¼1ã¤ä½œæˆï¼ˆæ—¢å­˜ä½œæˆï¼‰
+ãƒ»ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹4ã¤ä½œæˆ
+  â€»é€ä¿¡å…ƒ/é€ä¿¡å…ˆã®å¤‰æ›´ãƒã‚§ãƒƒã‚¯ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã“ã¨
+  - vsrx-externalã€€192.168.0.30
+  - vsrx-internalã€€192.168.10.30
   - web-mgmt 192.168.20.40
   - st2-mgmt 192.168.20.20
 
-ŸEWC—pƒT[ƒo
-Et2.medium‚ÅAMI‚©‚ç‹N“®@handon-ewc-ami
-E‹N“®‚ÌNW: external 192.168.0.20
-<‹N“®Œã>
-E‹N“®Œã’Ç‰ÁNW: mgmt
-Eƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX‚ÌƒAƒ^ƒbƒ` x1
-EÄ‹N“®
-Eexternal‘¤‚ÌIF‚ÉEIPƒAƒ^ƒbƒ`
+â—†EWCç”¨ã‚µãƒ¼ãƒ
+ãƒ»t2.mediumã§AMIã‹ã‚‰èµ·å‹•ã€€handon-ewc-ami
+ãƒ»èµ·å‹•æ™‚ã®NW: external 192.168.0.20
+<èµ·å‹•å¾Œ>
+ãƒ»èµ·å‹•å¾Œè¿½åŠ NW: mgmt
+ãƒ»ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚¢ã‚¿ãƒƒãƒ x1
+ãƒ»å†èµ·å‹•
+ãƒ»externalå´ã®IFã«EIPã‚¢ã‚¿ãƒƒãƒ
 
-ŸvSRX
-Ec4.xlarge‚ÅAMI‚©‚ç‹N“®
-E‹N“®‚Éuser-data–„‚ß‚İ(‰ŠúƒRƒ“ƒtƒBƒO)
-E‹N“®‚ÌNW: mgmt 192.168.20.30
-Euser-data“\‚è•t‚¯
-<‹N“®Œã>
-E‹N“®Œã’Ç‰ÁNW: external, internal
-Eƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX‚ÌƒAƒ^ƒbƒ` x2
-EÄ‹N“®
-Eexternal‚Ìƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX‚ÉƒZƒJƒ“ƒ_ƒŠIP•t—^@192.168.0.31
-Eexternal‚Ìƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX‚ÉEIPƒAƒ^ƒbƒ`
+â—†vSRX
+ãƒ»c4.xlargeã§AMIã‹ã‚‰èµ·å‹•
+ãƒ»èµ·å‹•æ™‚ã«user-dataåŸ‹ã‚è¾¼ã¿(åˆæœŸã‚³ãƒ³ãƒ•ã‚£ã‚°)
+ãƒ»èµ·å‹•æ™‚ã®NW: mgmt 192.168.20.30
+ãƒ»user-dataè²¼ã‚Šä»˜ã‘
+<èµ·å‹•å¾Œ>
+ãƒ»èµ·å‹•å¾Œè¿½åŠ NW: external, internal
+ãƒ»ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚¢ã‚¿ãƒƒãƒ x2
+ãƒ»å†èµ·å‹•
+ãƒ»externalã®ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã«ã‚»ã‚«ãƒ³ãƒ€ãƒªIPä»˜ä¸ã€€192.168.0.31
+ãƒ»externalã®ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã«EIPã‚¢ã‚¿ãƒƒãƒ
 
-ŸWebƒT[ƒo
-Et2.micro‚ÅAMI‚©‚ç‹N“®@handon-websever-ami
-E‹N“®‚ÌNW: internal 192.168.10.40
-<‹N“®Œã>
-E‹N“®Œã’Ç‰ÁNW: mgmt
-Eƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒX‚ÌƒAƒ^ƒbƒ` x1
-EÄ‹N“®
+â—†Webã‚µãƒ¼ãƒ
+ãƒ»t2.microã§AMIã‹ã‚‰èµ·å‹•ã€€handon-websever-ami
+ãƒ»èµ·å‹•æ™‚ã®NW: internal 192.168.10.40
+<èµ·å‹•å¾Œ>
+ãƒ»èµ·å‹•å¾Œè¿½åŠ NW: mgmt
+ãƒ»ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚¢ã‚¿ãƒƒãƒ x1
+ãƒ»å†èµ·å‹•
 
-ŸƒCƒ“ƒXƒ^ƒ“ƒX‹N“®Œã‚ÉÀs
-Eƒ‹[ƒgƒe[ƒuƒ‹•ÒW
-  - internal‚ÌDGW‚ÉvSRX‚Ìinternal‘¤ƒlƒbƒgƒ[ƒNƒCƒ“ƒ^[ƒtƒF[ƒXİ’è
+
