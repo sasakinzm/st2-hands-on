@@ -281,6 +281,7 @@ Resources:
 #インスタンスにネットワークインターフェースアタッチ
   EWCManagementInterfaceAttach:
     Type: AWS::EC2::NetworkInterfaceAttachment
+    DependsOn: EWCAssociateEIP
     Properties:
       DeleteOnTermination: false
       DeviceIndex: 1
@@ -323,6 +324,7 @@ Resources:
 #EIP割り当て
   EWCAssociateEIP:
     Type: AWS::EC2::EIPAssociation
+    DependsOn: LaunchEWC
     Properties:
       AllocationId: !GetAtt GenerateEIP1.AllocationId
       NetworkInterfaceId: !Ref MakeEWCManagementInterface
