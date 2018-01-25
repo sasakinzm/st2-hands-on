@@ -30,8 +30,8 @@
 <起動後>
 ・起動後追加NW: mgmt
 ・ネットワークインターフェースのアタッチ x1
-・再起動
 ・external側のIFにEIPアタッチ
+・再起動
 
 ◆vSRX
 ・c4.xlargeでAMIから起動
@@ -41,9 +41,9 @@
 <起動後>
 ・起動後追加NW: external, internal
 ・ネットワークインターフェースのアタッチ x2
-・再起動
 ・externalのネットワークインターフェースにセカンダリIP付与　192.168.0.31
 ・externalのネットワークインターフェースにEIPアタッチ
+・再起動
 
 ◆Webサーバ
 ・t2.microでAMIから起動　handon-websever-ami
