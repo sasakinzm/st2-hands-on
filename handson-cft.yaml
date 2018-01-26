@@ -133,6 +133,11 @@ Resources:
         FromPort: 443
         ToPort: 443
         IpProtocol: tcp
+      -
+        CidrIp: 54.250.155.218/32
+        FromPort: 22
+        ToPort: 22
+        IpProtocol: tcp
   MakeInternalSG:
     DependsOn: MakeVPC
     Type: AWS::EC2::SecurityGroup
@@ -335,3 +340,45 @@ Resources:
       AllocationId: !GetAtt GenerateEIP2.AllocationId
       NetworkInterfaceId: !Ref MakeVSRXExternalInterface
       PrivateIpAddress: 192.168.0.31
+
+#Ansible実行用インスタンス起動
+  LaunchAnsible:
+    Type: AWS::EC2::Instance
+    DependsOn: LaunchEWC
+    Properties: 
+      AvailabilityZone: ap-northeast-1a
+      ImageId: ami-2cee824a
+      InstanceInitiatedShutdownBehavior: stop
+      InstanceType: t2.micro
+      KeyName: handson-key
+      SourceDestCheck: false
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: 
+            - !Ref MakeExternalSG
+          SubnetId: !Ref MakeExternalSubnet
+      Tags: 
+      - Key: Name
+        Value: Ansible
+
+#Ansibleインスタンス用ネットワークインターフェース作成、アタッチ
+  MakeAnsibleManagementInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref MakeManagementSubnet
+      PrivateIpAddress: 192.168.20.10
+      SourceDestCheck: false
+      GroupSet:
+      - !Ref MakeManagementSG
+      Tags:
+      - Key: Name
+        Value: ansible-management
+
+  AnsibleManagementInterfaceAttach:
+    Type: AWS::EC2::NetworkInterfaceAttachment
+    Properties:
+      DeleteOnTermination: false
+      DeviceIndex: 1
+      InstanceId: !Ref LaunchAnsible
+      NetworkInterfaceId: !Ref MakeAnsibleManagementInterface
