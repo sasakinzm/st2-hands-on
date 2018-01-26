@@ -16,7 +16,7 @@ Resources:
     Properties:
       Tags:
       - Key: Name
-        Value: Handson-igw
+        Value: Handson-igw-a
 
 #IGWをVPCにアタッチ
   AttachIGW:
@@ -32,21 +32,21 @@ Resources:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: External-rt
+        Value: External-rt-a
   MakeInternalRT:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: internal-rt
+        Value: internal-rt-a
   MakeManagementRT:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: Management-rt
+        Value: Management-rt-a
 
 #Externalサブネット作成,ルートテーブル関連付け、デフォゲ追加
   MakeExternalSubnet:
@@ -59,7 +59,7 @@ Resources:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: External
+        Value: External-a
   ExternalSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -84,7 +84,7 @@ Resources:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: Internal
+        Value: Internal-a
   InternalSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -102,7 +102,7 @@ Resources:
       VpcId: !Ref MakeVPC
       Tags:
       - Key: Name
-        Value: Management
+        Value: Management-a
   ManagementSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -114,8 +114,8 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     DependsOn: MakeVPC
     Properties:
-      GroupName: External-sg
-      GroupDescription: External-sg
+      GroupName: External-sg-a
+      GroupDescription: External-sg-a
       VpcId: !Ref MakeVPC
       SecurityGroupIngress: 
       -
@@ -142,8 +142,8 @@ Resources:
     DependsOn: MakeVPC
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: Internal-sg
-      GroupDescription: Internal-sg
+      GroupName: Internal-sg-a
+      GroupDescription: Internal-sg-a
       VpcId: !Ref MakeVPC
       SecurityGroupIngress: 
       -
@@ -155,8 +155,8 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     DependsOn: MakeVPC
     Properties:
-      GroupName: Management-sg
-      GroupDescription: Management-sg
+      GroupName: Management-sg-a
+      GroupDescription: Management-sg-a
       VpcId: !Ref MakeVPC
       SecurityGroupIngress: 
       -
@@ -194,7 +194,7 @@ Resources:
       - !Ref MakeManagementSG
       Tags:
       - Key: Name
-        Value: ewc-management
+        Value: ewc-management-a
   MakeVSRXExternalInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -209,7 +209,7 @@ Resources:
       - !Ref MakeExternalSG
       Tags:
       - Key: Name
-        Value: vsrx-external
+        Value: vsrx-external-a
   MakeVSRXInternalInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -220,7 +220,7 @@ Resources:
       - !Ref MakeInternalSG
       Tags:
       - Key: Name
-        Value: vsrx-internal
+        Value: vsrx-internal-a
   MakeWebManagementInterface:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -231,14 +231,14 @@ Resources:
       - !Ref MakeManagementSG
       Tags:
       - Key: Name
-        Value: web-management
+        Value: web-management-a
 
 #インスタンス３つ起動
   LaunchEWC:
     Type: AWS::EC2::Instance
     Properties: 
       AvailabilityZone: us-east-1a
-      ImageId: ami-34f59852
+      ImageId: ami-3fb98445
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: t2.medium
       KeyName: handson-key
@@ -249,12 +249,12 @@ Resources:
       SubnetId: !Ref MakeExternalSubnet
       Tags: 
       - Key: Name
-        Value: EWC
+        Value: EWC-a
   LaunchVSRX:
     Type: AWS::EC2::Instance
     Properties: 
       AvailabilityZone: us-east-1a
-      ImageId: ami-ddbad9bb
+    ImageId: ami-bbbe83c1
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: c4.xlarge
       KeyName: handson-key
@@ -265,12 +265,12 @@ Resources:
       SubnetId: !Ref MakeManagementSubnet
       Tags: 
       - Key: Name
-        Value: vSRX
+        Value: vSRX-a
   LaunchWeb:
     Type: AWS::EC2::Instance
     Properties: 
       AvailabilityZone: us-east-1a
-      ImageId: ami-4bb4d72d
+      ImageId: ami-72c3fe08
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: t2.micro
       KeyName: handson-key
@@ -281,7 +281,7 @@ Resources:
       SubnetId: !Ref MakeInternalSubnet
       Tags: 
       - Key: Name
-        Value: Web
+        Value: Web-a
 
 #インスタンスにネットワークインターフェースアタッチ
   EWCManagementInterfaceAttach:
@@ -347,7 +347,7 @@ Resources:
     DependsOn: LaunchEWC
     Properties: 
       AvailabilityZone: us-east-1a
-      ImageId: ami-2cee824a
+      ImageId: ami-b3c6fbc9
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: t2.micro
       KeyName: handson-key
@@ -360,7 +360,7 @@ Resources:
           SubnetId: !Ref MakeExternalSubnet
       Tags: 
       - Key: Name
-        Value: Ansible
+        Value: Ansible-a
 
 #Ansibleインスタンス用ネットワークインターフェース作成、アタッチ
   MakeAnsibleManagementInterface:
@@ -373,7 +373,7 @@ Resources:
       - !Ref MakeManagementSG
       Tags:
       - Key: Name
-        Value: ansible-management
+        Value: ansible-management-a
 
   AnsibleManagementInterfaceAttach:
     Type: AWS::EC2::NetworkInterfaceAttachment
