@@ -5,7 +5,7 @@ Resources:
   MakeVPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.0.0.0/16
+      CidrBlock: 192.168.0.0/16
       Tags:
       - Key: Name
         Value: HandsonVPC
@@ -53,7 +53,7 @@ Resources:
     Type: AWS::EC2::Subnet
     DependsOn: AttachIGW
     Properties:
-      CidrBlock: 10.0.1.0/24
+      CidrBlock: 192.168.0.0/24
       AvailabilityZone: ap-northeast-1a
       MapPublicIpOnLaunch: 'false'
       VpcId: !Ref MakeVPC
@@ -78,7 +78,7 @@ Resources:
     Type: AWS::EC2::Subnet
     DependsOn: AttachIGW
     Properties:
-      CidrBlock: 10.0.2.0/24
+      CidrBlock: 192.168.10.0/24
       AvailabilityZone: ap-northeast-1a
       MapPublicIpOnLaunch: 'false'
       VpcId: !Ref MakeVPC
@@ -96,7 +96,7 @@ Resources:
     Type: AWS::EC2::Subnet
     DependsOn: AttachIGW
     Properties:
-      CidrBlock: 10.0.3.0/24
+      CidrBlock: 192.168.20.0/24
       AvailabilityZone: ap-northeast-1a
       MapPublicIpOnLaunch: 'false'
       VpcId: !Ref MakeVPC
@@ -183,7 +183,7 @@ Resources:
     Type: AWS::EC2::NetworkInterface
     Properties:
       SubnetId: !Ref MakeManagementSubnet
-      PrivateIpAddress: 10.0.3.20
+      PrivateIpAddress: 192.168.20.20
       SourceDestCheck: false
       GroupSet:
       - !Ref MakeManagementSG
@@ -195,9 +195,9 @@ Resources:
     Properties:
       SubnetId: !Ref MakeExternalSubnet
       PrivateIpAddresses:
-      - PrivateIpAddress: 10.0.1.30
+      - PrivateIpAddress: 192.168.0.30
         Primary: true
-      - PrivateIpAddress: 10.0.1.31
+      - PrivateIpAddress: 192.168.0.31
         Primary: false
       SourceDestCheck: false
       GroupSet:
@@ -209,7 +209,7 @@ Resources:
     Type: AWS::EC2::NetworkInterface
     Properties:
       SubnetId: !Ref MakeInternalSubnet
-      PrivateIpAddress: 10.0.2.30
+      PrivateIpAddress: 192.168.10.30
       SourceDestCheck: false
       GroupSet:
       - !Ref MakeInternalSG
@@ -220,7 +220,7 @@ Resources:
     Type: AWS::EC2::NetworkInterface
     Properties:
       SubnetId: !Ref MakeManagementSubnet
-      PrivateIpAddress: 10.0.3.40
+      PrivateIpAddress: 192.168.20.40
       SourceDestCheck: false
       GroupSet:
       - !Ref MakeManagementSG
@@ -237,7 +237,7 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: t2.medium
       KeyName: handson-key
-      PrivateIpAddress: 10.0.1.20
+      PrivateIpAddress: 192.168.0.20
       SecurityGroupIds: 
       - !Ref MakeExternalSG
       SourceDestCheck: false
@@ -253,7 +253,7 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: c4.xlarge
       KeyName: handson-key
-      PrivateIpAddress: 10.0.3.30
+      PrivateIpAddress: 192.168.20.30
       SecurityGroupIds: 
       - !Ref MakeManagementSG
       SourceDestCheck: false
@@ -269,7 +269,7 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: t2.micro
       KeyName: handson-key
-      PrivateIpAddress: 10.0.2.40
+      PrivateIpAddress: 192.168.10.40
       SecurityGroupIds: 
       - !Ref MakeInternalSG
       SourceDestCheck: false
@@ -328,10 +328,10 @@ Resources:
     Properties:
       AllocationId: !GetAtt GenerateEIP1.AllocationId
       InstanceId: !Ref LaunchEWC
-      PrivateIpAddress: 10.0.1.20
+      PrivateIpAddress: 192.168.0.20
   VSRXAssociateEIP:
     Type: AWS::EC2::EIPAssociation
     Properties:
       AllocationId: !GetAtt GenerateEIP2.AllocationId
       NetworkInterfaceId: !Ref MakeVSRXExternalInterface
-      PrivateIpAddress: 10.0.1.31
+      PrivateIpAddress: 192.168.0.31
