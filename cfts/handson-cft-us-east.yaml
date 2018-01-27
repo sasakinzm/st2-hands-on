@@ -254,7 +254,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties: 
       AvailabilityZone: us-east-1a
-    ImageId: ami-bbbe83c1
+      ImageId: ami-bbbe83c1
       InstanceInitiatedShutdownBehavior: stop
       InstanceType: c4.xlarge
       KeyName: handson-key
