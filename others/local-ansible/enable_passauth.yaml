@@ -1,0 +1,7 @@
+---
+- name: "enable pass auth"
+  hosts: instances
+  tasks:
+  - shell: 'sudo echo "Handson123" |sudo passwd --stdin centos'
+  - shell: 'sudo sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config'
+  - shell: 'sudo systemctl restart sshd'
