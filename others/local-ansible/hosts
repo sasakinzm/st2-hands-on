@@ -1,0 +1,10 @@
+[localhost]
+127.0.0.1
+
+[instances]
+192.168.20.40
+192.168.20.20
+
+[instances:vars]
+ansible_ssh_user=centos
+ansible_ssh_private_key_file=/home/centos/handson-key.pem
