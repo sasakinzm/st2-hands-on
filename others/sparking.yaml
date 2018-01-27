@@ -1,0 +1,5 @@
+---
+- name: "ansible to ansible"
+  hosts: ansible
+  tasks:
+  - shell: 'ansible-playbook enable_passauth.yaml'
