@@ -1,16 +1,16 @@
 #junos-config
-## Last changed: 2018-01-11 09:04:16 UTC
-version 17.3R1.10;
+## Last changed: 2018-01-29 00:39:42 UTC
+version 15.1X49-D110.4;
 system {
     root-authentication {
-        encrypted-password "$6$QS0h283w$Z/DYdhO2ggS6RHxSaRFCVHyrKBvOw/T6xVkxgnF2vkZAAMnXT2TMiEG8r6ROm2uhlWXeei3vwDLnG0DDtulY10"; ## SECRET-DATA
+        encrypted-password "$5$GXF/IWZW$EZU7P.EfC1CXUA6d/XIbsYOOWE8CnG7e15ryxaWjVB/"; ## SECRET-DATA
     }
     login {
         user lab {
             uid 2000;
             class super-user;
             authentication {
-                encrypted-password "$6$B7u4vkRt$hVb9VozyTZtVdXvXC5vhJgLgHu.CdxyTbejyjx3J70R6X2l4wWXL3GtPb3pSkdqysm2DcrfF4OMC9YZgT/06S0"; ## SECRET-DATA
+                encrypted-password "$5$NAT85vNx$Uao9Scuy7Q.kmxGgP29GCqxPSflALy6cc9ZLgYjF7p3"; ## SECRET-DATA
             }
         }
     }
@@ -44,6 +44,32 @@ system {
     }
 }
 security {
+    policies {
+        from-zone untrust to-zone trust {
+            policy untr2tr {
+                match {
+                    source-address any;
+                    destination-address any;
+                    application any;
+                }
+                then {
+                    permit;
+                }
+            }
+        }
+        from-zone trust to-zone untrust {
+            policy tr2untr {
+                match {
+                    source-address any;
+                    destination-address any;
+                    application any;
+                }
+                then {
+                    permit;
+                }
+            }
+        }
+    }
     zones {
         security-zone trust {
             host-inbound-traffic {
