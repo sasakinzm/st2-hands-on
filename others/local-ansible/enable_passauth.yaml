@@ -1,7 +1,17 @@
 ---
 - name: "enable pass auth"
-  hosts: instances
+  hosts: ewc
   tasks:
   - shell: 'sudo echo "Handson123" |sudo passwd --stdin centos'
   - shell: 'sudo sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config'
   - shell: 'sudo systemctl restart sshd'
+  - shell: 'history -c'
+
+- name: "enable pass auth"
+  hosts: webserver
+  tasks:
+  - shell: 'sudo echo "Handson123" |sudo passwd --stdin centos'
+  - shell: 'sudo sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config'
+  - shell: 'sudo systemctl restart sshd'
+  - shell: 'sudo ip route delete default'
+  - shell: 'sudo ip route add default via 192.168.10.30'
